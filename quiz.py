@@ -22,7 +22,7 @@ def ask(q, a, l):
 	print '%s?' % q,
 	ans = raw_input()
 	if ans == a:
-		print 'OK\n'
+		print 'OK: %s\n' % l
 		return True
 	else:
 		print 'NOPE: %s\n' % l
@@ -30,11 +30,15 @@ def ask(q, a, l):
 
 def main(fileName):
 	db = load_qadb(fileName)
-	hit = [0] * len(db)
 	miss = [0] * len(db)
+	hit = [0] * len(db)
 	while True:
 		try:
-			index = random.randint(0, len(db) - 1)
+			indices = list(xrange(len(db)))
+			for i, m in enumerate(miss):
+				if m - hit[i] > 0:
+					indices.extend([i] * (5 * (m - hit[i])))
+			index = random.choice(indices)
 			if ask(*db[index]):
 				hit[index] += 1
 			else:
