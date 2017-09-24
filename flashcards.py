@@ -58,15 +58,16 @@ def main(reverse, bidi, cards):
             bad.sort()
             print '\n\nHere are your worst results:'
             for m, i in reversed(bad):
-                print '%s : %d' % (db[i][0], m)
+                print '%d: %s - %s' % (m, db[i][0], db[i][1])
             print 'Bye!'
             return
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Learning Flashcards quiz.  Ctrl-C to exit.')
+    parser = argparse.ArgumentParser(description='Learning Flashcards quiz.')
     parser.add_argument('-r', '--reverse', action='store_true', help='reverse side quiz')
     parser.add_argument('-b', '--bidi', action='store_true', help='both direct and reverse quiz')
     parser.add_argument('cards', metavar='CARD.tsv', type=str, nargs='+', help='flashcard tsv files')
     args = parser.parse_args()
+    print '\t\tCtrl-C to exit.'
     main(args.reverse, args.bidi, args.cards)

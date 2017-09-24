@@ -3,13 +3,13 @@
 ```
 usage: flashcards.py [-h] [-r] [-b] CARD.tsv [CARD.tsv ...]
 
-Learning Flashcards quiz
+Learning Flashcards quiz.
 
 positional arguments:
-  CARD.tsv        flashcard tsv files
+  CARD.tsv       flashcard tsv files
 
 optional arguments:
-  -h, --help      show this help message and exit
-  -r, --reversed  reverse side quiz
-  -b, --bidi      both direct and reverse quiz
+  -h, --help     show this help message and exit
+  -r, --reverse  reverse side quiz
+  -b, --bidi     both direct and reverse quiz
 ```
