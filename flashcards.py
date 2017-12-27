@@ -4,6 +4,11 @@ import random
 import argparse
 
 
+START_WEIGHT = 1
+MIN_WEIGHT = 0
+MAX_WEIGHT = 8
+
+
 def load_tsv(db, reverse, bidi, fileName):
     linenum = 0
     with open(fileName, 'r') as f:
@@ -36,31 +41,53 @@ def ask(q, a):
         return False
 
 
+def weighted_choice_king(weights):
+    total = 0
+    winner = 0
+    for i, w in enumerate(weights):
+        total += w
+        if random.random() * total < w:
+            winner = i
+    return winner
+
+
+def all_zeros(arr):
+    for w in arr:
+        if w > 0:
+            return False
+    return True
+
+
+def print_worst(miss, db):
+    if all_zeros(miss):
+        print 'Flawless victory! Bye!'
+        return
+    bad = [(m, i) for i, m in enumerate(miss) if m > 0]
+    bad.sort()
+    print '\n\nHere are your worst results:'
+    for m, i in reversed(bad):
+        print '%d: %s - %s' % (m, db[i][0], db[i][1])
+    print 'Bye!'
+    return
+
+
 def main(reverse, bidi, cards):
     db = []
     for fileName in cards:
         load_tsv(db, reverse, bidi, fileName)
+    weights = [START_WEIGHT] * len(db)
     miss = [0] * len(db)
-    hit = [0] * len(db)
-    while True:
+    while not all_zeros(weights):
         try:
-            indices = list(xrange(len(db)))
-            for i, m in enumerate(miss):
-                if m - hit[i] > 0:
-                    indices.extend([i] * (5 * (m - hit[i])))
-            index = random.choice(indices)
+            index = weighted_choice_king(weights)
             if ask(*db[index]):
-                hit[index] += 1
+                weights[index] = max(weights[index] / 2, MIN_WEIGHT)
             else:
+                weights[index] = min(weights[index] * 2, MAX_WEIGHT)
                 miss[index] += 1
         except KeyboardInterrupt:
-            bad = [(m, i) for i, m in enumerate(miss) if m > 0]
-            bad.sort()
-            print '\n\nHere are your worst results:'
-            for m, i in reversed(bad):
-                print '%d: %s - %s' % (m, db[i][0], db[i][1])
-            print 'Bye!'
-            return
+            break
+    print_worst(miss, db)
 
 
 if __name__ == '__main__':
