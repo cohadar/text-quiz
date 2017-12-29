@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 import random
+import string
 import argparse
 
 
@@ -31,7 +32,7 @@ def load_tsv(db, reverse, bidi, fileName):
 
 
 def ask(q, a):
-    print q,
+    print q
     ans = raw_input()
     if ans == a:
         return True
@@ -64,6 +65,16 @@ def non_zeros(arr):
     return count
 
 
+def to_chars(arr):
+    ret = ""
+    for w in arr:
+        if w > 0:
+            ret += '.'
+        else:
+            ret = '_' + ret
+    return ret
+
+
 def print_worst(miss, db):
     if all_zeros(miss):
         print 'Flawless victory! Bye!'
@@ -88,11 +99,12 @@ def main(reverse, bidi, cards):
             index = weighted_choice_king(weights)
             if ask(*db[index]):
                 weights[index] = max(weights[index] / 2, MIN_WEIGHT)
-                print 'OK %d/%d\n' % (non_zeros(weights), len(db))
+                print to_chars(weights)
             else:
                 weights[index] = min(weights[index] * 2, MAX_WEIGHT)
                 miss[index] += 1
-                print 'NOPE: %s\n' % db[index][1]
+                print db[index][1]
+            print ''
         except KeyboardInterrupt:
             break
     print_worst(miss, db)
