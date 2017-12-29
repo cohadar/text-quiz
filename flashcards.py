@@ -34,10 +34,8 @@ def ask(q, a):
     print q,
     ans = raw_input()
     if ans == a:
-        print 'OK'
         return True
     else:
-        print 'NOPE: %s\n' % a
         return False
 
 
@@ -56,6 +54,14 @@ def all_zeros(arr):
         if w > 0:
             return False
     return True
+
+
+def non_zeros(arr):
+    count = 0
+    for w in arr:
+        if w > 0:
+            count += 1
+    return count
 
 
 def print_worst(miss, db):
@@ -82,9 +88,11 @@ def main(reverse, bidi, cards):
             index = weighted_choice_king(weights)
             if ask(*db[index]):
                 weights[index] = max(weights[index] / 2, MIN_WEIGHT)
+                print 'OK %d/%d\n' % (non_zeros(weights), len(db))
             else:
                 weights[index] = min(weights[index] * 2, MAX_WEIGHT)
                 miss[index] += 1
+                print 'NOPE: %s\n' % db[index][1]
         except KeyboardInterrupt:
             break
     print_worst(miss, db)
