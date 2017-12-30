@@ -1,7 +1,6 @@
 #!/usr/bin/python
 
 import random
-import string
 import argparse
 
 
@@ -75,10 +74,15 @@ def to_chars(arr):
     return ret
 
 
-def print_worst(miss, db):
+def print_worst(weights, miss, db):
     if all_zeros(miss):
-        print 'Flawless victory! Bye!'
+        if all_zeros(weights):
+            print 'Flawless victory! Bye!'
+        else:
+            print 'Incomplete! Bye.'
         return
+    if not all_zeros(weights):
+        print '\nIncomplete!'
     bad = [(m, i) for i, m in enumerate(miss) if m > 0]
     bad.sort()
     print '\n\nHere are your worst results:'
@@ -107,7 +111,7 @@ def main(reverse, bidi, cards):
             print ''
         except KeyboardInterrupt:
             break
-    print_worst(miss, db)
+    print_worst(weights, miss, db)
 
 
 if __name__ == '__main__':
